@@ -48,15 +48,15 @@ USED_WORDS = HERE / "used_words.txt"
 # must start with our last N letters, ending on these combos forces them
 # into a rare-start pattern (pn-, kn-, thr-, scr-, squ-, …).
 HARD_SUFFIXES_2 = (
-    "nk", "pn", "ps", "pt", "gn", "mn", "tm", "sr", "wr", "kn", "vl", "ly", "ny", "zy", "xy","ux",
+    "nk","yw", "fs", "yz", "dz", "sz", "pn", "ez", "ly", "ny", "ps", "pt", "gn", "mn", "tm", "sr", "wr", "kn", "vl",   "zy", "xy","ux",
 )
 HARD_SUFFIXES_3 = (
     "asm", "zal", "sph", "scr", "spl", "spr", "str", "thr", "shr", "scl", "squ",
 )
 HARD_SUFFIXES_4 = (
-    "sphr", "schr", "schn", "schl", "squl", "squw",
+    "tapo", "sitz", "sphr", "schr", "schn", "schl", "squl", "squw",
 )
-
+    
 KILLER_SUFFIXES: dict[int, tuple[str, ...]] = {
     2: HARD_SUFFIXES_2,
     3: HARD_SUFFIXES_3,
