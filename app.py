@@ -262,13 +262,13 @@ def type_natural(word: str) -> None:
 
         # ~8% short micro-pause between letters
         elif roll < 0.16:
-            time.sleep(random.uniform(0.12, 0.25))
+            time.sleep(random.uniform(0.8, 0.16))
 
         _type_char(chars[i])
-        time.sleep(random.uniform(0.09, 0.17))
+        time.sleep(random.uniform(0.06, 0.12))
         i += 1
 
-    time.sleep(random.uniform(0.18, 0.45))
+    time.sleep(random.uniform(0.10, 0.25))
     _press("enter")
 
 
@@ -577,3 +577,85 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
+
+
+# -- command pattern ---
+
+"""The Command Pattern is a behavioral design pattern that turns a request 
+into a stand-alone object containing all the information about that request. 
+This allows you to pass requests as arguments, delay or queue their execution, 
+and support undoable operations."""
+
+# example 
+
+
+from abc import ABC, abstractmethod
+
+# 1. Command Interface
+class Command(ABC):
+    @abstractmethod
+    def execute(self):
+        pass
+
+    @abstractmethod
+    def undo(self):
+        pass
+
+# 2. Receiver (The object being controlled)
+class Light:
+    def turn_on(self):
+        print("The light is ON")
+
+    def turn_off(self):
+        print("The light is OFF")
+
+# 3. Concrete Commands
+class LightOnCommand(Command):
+    def __init__(self, light: Light):
+        self.light = light
+
+    def execute(self):
+        self.light.turn_on()
+
+    def undo(self):
+        self.light.turn_off()
+
+class LightOffCommand(Command):
+    def __init__(self, light: Light):
+        self.light = light
+
+    def execute(self):
+        self.light.turn_off()
+
+    def undo(self):
+        self.light.turn_on()
+
+# 4. Invoker (The object triggering the command)
+class RemoteControl:
+    def __init__(self):
+        self._history = []
+
+    def press_button(self, command: Command):
+        command.execute()
+        self._history.append(command)
+
+    def press_undo(self):
+        if self._history:
+            command = self._history.pop()
+            command.undo()
+
+# Client Code
+if __name__ == "__main__":
+    my_light = Light()
+    remote = RemoteControl()
+
+    # Turn light on
+    on_command = LightOnCommand(my_light)
+    remote.press_button(on_command)  # Output: The light is ON
+
+    # Turn light off
+    off_command = LightOffCommand(my_light)
+    remote.press_button(off_command) # Output: The light is OFF
+
+    # Undo last action (turns light back on)
+    remote.press_undo()              # Output: The light is ON
