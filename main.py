@@ -1,15 +1,3 @@
-"""Build a CSV of every word in words_alpha.txt, tagged for length & commonness.
-
-Reads words_alpha.txt and writes words.csv with columns:
-    word, longornot, commonornot
-
-longornot:    "yes" when len(word) > 10
-commonornot:  "yes" when wordfreq Zipf >= 4.0 (~known to most speakers)
-
-NOTE: no words are filtered out — every entry in words_alpha.txt is kept,
-even oddities like "aaa". If you want to exclude them at lookup time use
-blacklist.txt in the app.
-"""
 
 import csv
 from pathlib import Path
@@ -20,8 +8,8 @@ HERE = Path(__file__).parent
 SRC = HERE / "words_alpha.txt"
 OUT = HERE / "words.csv"
 
-LONG_THRESHOLD = 10        # strictly longer than this is "long"
-COMMON_ZIPF = 4.0          # Zipf >= 4.0 ~ "common" everyday word
+LONG_THRESHOLD = 10  
+COMMON_ZIPF = 4.0     
 
 
 def main() -> None:
