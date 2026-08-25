@@ -36,7 +36,7 @@ from tkinter import ttk
 import keyboard
 import pydirectinput
 
-pydirectinput.PAUSE = 0           # we manage our own delays
+pydirectinput.PAUSE = 0           # manage delays
 pydirectinput.FAILSAFE = False    # don't abort when mouse goes to a corner
 
 HERE = Path(__file__).parent
@@ -172,8 +172,7 @@ def score_word(
     if want_common and is_common:
         s += 50
     if want_long:
-        # Heavily weight actual length so the longest legal word wins,
-        # regardless of whether the CSV flagged it "long".
+        # Heavily weight actual length so the longest legal word wins
         s += len(word) * 100
     else:
         s += min(len(word), 20)
@@ -252,7 +251,7 @@ def type_natural(word: str) -> None:
             if wrong == chars[i]:
                 wrong = random.choice(_LETTERS)
             _type_char(wrong)
-            time.sleep(random.uniform(0.15, 0.35))  # notice it
+            time.sleep(random.uniform(0.15, 0.35)) 
             _press("backspace")
             time.sleep(random.uniform(0.08, 0.18))
 
@@ -288,15 +287,13 @@ class App:
         self.blacklist = load_set(BLACKLIST)
         self.used = load_set(USED_WORDS)
         self.last_word: str | None = None
-        self.last_typed_len: int = 0      # chars we actually pressed last time
+        self.last_typed_len: int = 0
         self._backspace_running = False
-        self._target_hwnd: int = 0        # set by the focus watcher
+        self._target_hwnd: int = 0
 
         self._build_ui()
         self.root.update_idletasks()
         self._self_hwnd = int(self.root.winfo_id())  # tk widget HWND
-        # Top-level HWND is the parent of the widget HWND on Windows. We
-        # use GetForegroundWindow filtering instead — simpler & robust.
 
         self._start_focus_watcher()
         self._register_hotkeys()
@@ -403,10 +400,8 @@ class App:
 
         frm.columnconfigure(1, weight=1)
 
-    # -- focus tracking: remember the last non-self foreground window
     def _start_focus_watcher(self) -> None:
         def is_self(hwnd: int) -> bool:
-            # Walk the title — robust against tk's widget-vs-toplevel HWND quirk.
             return get_window_title(hwnd) == "Last Letter Cheat"
 
         def tick() -> None:
@@ -501,9 +496,6 @@ class App:
         if word is None:
             self.root.after(0, self._set_status, "No other match.")
             return
-        # Undo whatever we last typed. +1 in case Enter wasn't actually
-        # consumed by the game and the cursor is on a new blank line — extra
-        # backspace there is harmless. We don't go +1 if nothing was typed.
         n = self.last_typed_len
         self._type_word(word, prebackspaces=n)
 
@@ -551,13 +543,8 @@ class App:
 
     # -- global hotkeys (work when this window is NOT focused)
     def _register_hotkeys(self) -> None:
-        # F8: when pressed from inside the game, focus is already there —
-        # but call force_foreground anyway in case the user pressed F8
-        # from our window (e.g. right after typing the prefix).
         keyboard.add_hotkey("f8", lambda: self.on_find_and_type())
         keyboard.add_hotkey("f10", lambda: self.on_use_another())
-        # F9 hold: backspace. If pressed from game, focus is there already;
-        # if from our window, the switch=True branch handles it.
         keyboard.on_press_key("f9", lambda _e: self._start_backspace(switch=True))
         keyboard.on_release_key("f9", lambda _e: self._stop_backspace())
 
@@ -651,11 +638,11 @@ if __name__ == "__main__":
 
     # Turn light on
     on_command = LightOnCommand(my_light)
-    remote.press_button(on_command)  # Output: The light is ON
+    remote.press_button(on_command)
 
     # Turn light off
     off_command = LightOffCommand(my_light)
-    remote.press_button(off_command) # Output: The light is OFF
+    remote.press_button(off_command)
 
     # Undo last action (turns light back on)
-    remote.press_undo()              # Output: The light is ON
+    remote.press_undo()
